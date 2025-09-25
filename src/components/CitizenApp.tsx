@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import Map from "@/components/Map";
 import { 
   Camera, 
   MapPin, 
@@ -17,6 +19,16 @@ import {
 } from "lucide-react";
 
 const CitizenApp = () => {
+  const [selectedLocation, setSelectedLocation] = useState<{
+    coordinates: [number, number];
+    address: string;
+  } | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+
+  const handleLocationSelect = (coordinates: [number, number], address: string) => {
+    setSelectedLocation({ coordinates, address });
+  };
+
   const userReports = [
     {
       id: "SR-2024-001",
@@ -80,13 +92,20 @@ const CitizenApp = () => {
             </div>
           </Card>
 
-          {/* Location */}
+          {/* Location Selection */}
           <div className="space-y-2">
-            <label className="font-medium text-foreground">Current Location</label>
-            <div className="flex items-center space-x-2 p-3 bg-muted rounded-lg">
-              <MapPin className="h-5 w-5 text-primary" />
-              <span className="text-foreground">123 Main Street, Downtown</span>
-            </div>
+            <label className="font-medium text-foreground">Select Location</label>
+            <Map
+              onLocationSelect={handleLocationSelect}
+              height="200px"
+              interactive={true}
+            />
+            {selectedLocation && (
+              <div className="flex items-center space-x-2 p-3 bg-muted rounded-lg">
+                <MapPin className="h-5 w-5 text-primary" />
+                <span className="text-foreground text-sm">{selectedLocation.address}</span>
+              </div>
+            )}
           </div>
 
           {/* Issue Category */}
@@ -96,7 +115,12 @@ const CitizenApp = () => {
               {issueCategories.map((category, index) => (
                 <button 
                   key={index}
-                  className={`p-3 rounded-lg border-2 border-transparent hover:border-primary transition-all ${category.color} text-center`}
+                  onClick={() => setSelectedCategory(category.name)}
+                  className={`p-3 rounded-lg border-2 transition-all text-center ${
+                    selectedCategory === category.name 
+                      ? 'border-primary bg-primary/10' 
+                      : `border-transparent hover:border-primary ${category.color}`
+                  }`}
                 >
                   <div className="text-2xl mb-1">{category.icon}</div>
                   <div className="text-sm font-medium">{category.name}</div>

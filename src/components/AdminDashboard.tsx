@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import Map from "@/components/Map";
 import { 
   Users, 
   AlertTriangle, 
@@ -30,6 +31,7 @@ const AdminDashboard = () => {
       id: "SR-2024-001",
       category: "Road Issues",
       location: "Main St & 5th Ave",
+      coordinates: [-74.006, 40.7128] as [number, number],
       date: "2024-01-15",
       status: "New",
       assignedTo: "John Smith",
@@ -39,6 +41,7 @@ const AdminDashboard = () => {
       id: "SR-2024-002", 
       category: "Lighting",
       location: "Central Park North",
+      coordinates: [-73.958, 40.7829] as [number, number],
       date: "2024-01-14",
       status: "In Progress",
       assignedTo: "Sarah Johnson",
@@ -48,6 +51,7 @@ const AdminDashboard = () => {
       id: "SR-2024-003",
       category: "Sanitation",
       location: "Oak Street",
+      coordinates: [-74.015, 40.7089] as [number, number],
       date: "2024-01-14", 
       status: "Resolved",
       assignedTo: "Mike Wilson",
@@ -57,6 +61,7 @@ const AdminDashboard = () => {
       id: "SR-2024-004",
       category: "Traffic",
       location: "Highway 101",
+      coordinates: [-73.995, 40.7489] as [number, number],
       date: "2024-01-13",
       status: "Overdue",
       assignedTo: "Lisa Brown",
@@ -96,16 +101,23 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Interactive Map Placeholder */}
+            {/* Interactive Map */}
             <Card className="p-6 shadow-card">
               <h2 className="text-xl font-semibold mb-4">Issue Location Map</h2>
-              <div className="bg-muted rounded-lg h-64 flex items-center justify-center">
-                <div className="text-center text-muted-foreground">
-                  <MapPin className="h-12 w-12 mx-auto mb-2" />
-                  <p>Interactive Map with Issue Pins</p>
-                  <p className="text-sm">Shows real-time issue locations</p>
-                </div>
-              </div>
+              <Map
+                markers={recentIssues.map(issue => ({
+                  coordinates: issue.coordinates,
+                  title: `${issue.id} - ${issue.category}`,
+                  description: `${issue.location} - ${issue.status}`,
+                  color: issue.status === 'Resolved' ? '#22c55e' : 
+                         issue.status === 'In Progress' ? '#f59e0b' : 
+                         issue.status === 'Overdue' ? '#ef4444' : '#3b82f6'
+                }))}
+                height="300px"
+                interactive={true}
+                center={[-74.006, 40.7128]}
+                zoom={11}
+              />
             </Card>
 
             {/* Issue Management Table */}

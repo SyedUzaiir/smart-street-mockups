@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Map from "@/components/Map";
 import { 
   MapPin, 
   Camera, 
@@ -18,6 +19,7 @@ const FieldWorkerApp = () => {
       id: "SR-2024-001",
       category: "Road Issues",
       location: "Main St & 5th Ave",
+      coordinates: [-74.006, 40.7128] as [number, number],
       priority: "High",
       priorityColor: "bg-destructive",
       description: "Large pothole causing traffic issues",
@@ -27,6 +29,7 @@ const FieldWorkerApp = () => {
       id: "SR-2024-002", 
       category: "Lighting",
       location: "Central Park North",
+      coordinates: [-73.958, 40.7829] as [number, number],
       priority: "Medium",
       priorityColor: "bg-warning",
       description: "Streetlight not working",
@@ -36,6 +39,7 @@ const FieldWorkerApp = () => {
       id: "SR-2024-003",
       category: "Sanitation", 
       location: "Oak Street",
+      coordinates: [-74.015, 40.7089] as [number, number],
       priority: "Low",
       priorityColor: "bg-success",
       description: "Overflowing trash bin",
@@ -132,13 +136,18 @@ const FieldWorkerApp = () => {
                   <span className="font-medium text-foreground">GPS Navigation</span>
                   <Navigation className="h-5 w-5 text-primary" />
                 </div>
-                <div className="bg-background rounded h-32 flex items-center justify-center">
-                  <div className="text-center text-muted-foreground">
-                    <MapPin className="h-8 w-8 mx-auto mb-2" />
-                    <p className="text-sm">Route to Main St & 5th Ave</p>
-                    <p className="text-xs">0.5 miles • 3 min drive</p>
-                  </div>
-                </div>
+                <Map
+                  markers={[{
+                    coordinates: assignedTasks[0].coordinates,
+                    title: assignedTasks[0].location,
+                    description: assignedTasks[0].description,
+                    color: '#3b82f6'
+                  }]}
+                  height="150px"
+                  interactive={false}
+                  center={assignedTasks[0].coordinates}
+                  zoom={15}
+                />
               </div>
 
               {/* Original Report */}
